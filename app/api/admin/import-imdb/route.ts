@@ -17,7 +17,7 @@ async function downloadImage(url: string, filename: string): Promise<string | nu
         const res = await fetch(url);
         if (!res.ok) throw new Error(`Failed to fetch image: ${res.statusText}`);
 
-        // 1. Try Vercel Blob (if configured)
+        // 1. Try Vercel Blob (Preferred for Production/Persistent staging)
         if (process.env.BLOB_READ_WRITE_TOKEN) {
             const blob = await put(`movies/${filename}`, res.body as ReadableStream, {
                 access: 'public',
@@ -26,37 +26,13 @@ async function downloadImage(url: string, filename: string): Promise<string | nu
             return blob.url;
         }
 
-        // 2. Fallback to Local Filesystem
-        const publicDir = path.join(process.cwd(), 'public', 'images', 'movies');
-        await fs.promises.mkdir(publicDir, { recursive: true });
-        const filePath = path.join(publicDir, filename);
-
-        // We need to clone the response if we were to support both (but we do either/or here)
-        // If we fall through to here, res.body might be consumed if we tried blob above and failed?
-        // Actually, the `if` block returns. So we are safe.
-
-        const fileStream = fs.createWriteStream(filePath);
-        if (!res.body) return null;
-
-        // Node Readable from Web Stream
-        const reader = res.body.getReader();
-        const readable = new Readable({
-            async read() {
-                const { done, value } = await reader.read();
-                if (done) {
-                    this.push(null);
-                } else {
-                    this.push(Buffer.from(value));
-                }
-            }
-        });
-
-        await pipeline(readable, fileStream);
-
-        return `/images/movies/${filename}`;
+        // 2. Reliable Fallback: Use TMDB directly
+        // This ensures posters work even if Blob storage isn't configured yet
+        return url;
     } catch (error) {
         console.error('Error downloading image:', error);
-        return null;
+        // Final fallback: try returning the source URL anyway
+        return url;
     }
 }
 
