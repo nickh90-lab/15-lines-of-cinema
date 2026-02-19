@@ -90,13 +90,11 @@ export async function getMovieBySlug(slug: string): Promise<Movie | undefined> {
 
 
 export async function saveMovies(movies: Movie[]): Promise<void> {
-    // Note: This function signature is a bit weird for DB actions (usually we save one movie).
-    // But for now, we only use this in limited places (re-writing the whole JSON).
-    // In DB land, we should probably have `createMovie` or `updateMovie`.
-    // For this refactor, let's keep it simple: WE DO NOT IMPLEMENT BULK SAVE TO DB HERE.
-    // The API routes should call create/update directly.
+    // Skip local backup in production to avoid read-only FS errors
+    if (process.env.NODE_ENV === 'production' && process.env.POSTGRES_PRISMA_URL) {
+        return;
+    }
 
-    // We ONLY write to FS here for backup/local dev.
     try {
         await fs.writeFile(dataPath, JSON.stringify(movies, null, 2));
     } catch (error) {

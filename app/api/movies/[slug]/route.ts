@@ -63,10 +63,10 @@ export async function DELETE(request: Request, props: { params: Promise<{ slug: 
 
         // DELETE from DB if available
         if (process.env.POSTGRES_PRISMA_URL) {
-            const { PrismaClient } = await import('@prisma/client');
-            const prisma = new PrismaClient();
+            // We use the established pattern to ensure we use the centralized Prisma connection
+            const { prisma } = await import('@/lib/data');
             try {
-                await prisma.movie.delete({ where: { slug } });
+                await (prisma as any).movie.delete({ where: { slug } });
             } catch (e) {
                 console.error("DB Delete Error", e);
             }
