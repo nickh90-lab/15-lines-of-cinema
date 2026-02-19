@@ -142,6 +142,9 @@ export async function upsertMovie(movie: Movie): Promise<void> {
             update: payload,
             create: payload
         });
+
+        // Skip local backup in production to avoid read-only FS errors
+        if (process.env.NODE_ENV === 'production') return;
     }
 
     // Also update local JSON for backup
