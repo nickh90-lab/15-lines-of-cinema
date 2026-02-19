@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 
 // Global Prisma instance to prevent multiple connections in dev
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
-const prisma = globalForPrisma.prisma || new PrismaClient();
+export const prisma = globalForPrisma.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 const dataPath = path.join(process.cwd(), 'data/movies.json');
