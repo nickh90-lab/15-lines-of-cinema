@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Movie {
+  id              String   @id @default(uuid())
+  slug            String   @unique
+  title           String
+  year            Int
+  director        String
+  posterUrl       String
+  backdropUrl     String?
+  rating          Float    @default(0.0)
+  reviewShort     String
+  reviewLong      String?  @db.Text
+  plot            String?  @db.Text
+  review15Lines   String[]
+  genres          String[]
+  duration        Int?
+  certification   String?
+  spokenLanguages String[]
+  
+  // Technical Scores (stored as JSON or separate columns? Let's use simplified columns)
+  storyScore       Float    @default(0)
+  actingScore      Float    @default(0)
+  paceScore        Float    @default(0)
+  endingScore      Float    @default(0)
+  originalityScore Float    @default(0)
+
+  // Cast (stored as JSON for simplicity in V1, or separate relation? Relation is cleaner but JSON is easier for migration)
+  // Let's use a JSON field for Cast to keep it similar to current structure and avoid complexity
+  cast            Json?    @default("[]")
+
+  trailerUrl      String?
+  streaming       String[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
