@@ -12,11 +12,11 @@ export default function AdminLayout({
             <aside className="w-64 border-r border-white/5 flex flex-col bg-black/40 backdrop-blur-2xl">
                 <div className="p-8">
                     <Link href="/" className="flex flex-col leading-none group">
-                        <span className="font-heading font-black text-2xl tracking-tighter text-white/90 group-hover:text-accent transition-colors">
-                            15
+                        <span className="font-heading font-black text-xl tracking-tighter text-white/90 group-hover:text-accent transition-colors">
+                            15 LINES
                         </span>
-                        <span className="font-heading font-black text-2xl tracking-tighter text-white/90 group-hover:text-accent transition-colors -mt-1">
-                            LINES
+                        <span className="font-heading font-bold text-[10px] tracking-[0.2em] text-white/60 group-hover:text-accent transition-colors -mt-1 ml-[1px]">
+                            OF CINEMA
                         </span>
                     </Link>
                 </div>

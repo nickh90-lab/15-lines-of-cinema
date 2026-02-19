@@ -9,7 +9,7 @@ interface FilterBarProps {
 
 export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
     const filters = [
-        { id: 'all', label: 'All Films' },
+        { id: 'all', label: 'All Movies' },
         { id: 'new', label: 'New Arrivals' },
         { id: 'top-50', label: 'Top 50' },
         { id: 'flop-50', label: 'Flop 50' },
