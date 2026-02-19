@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Movie } from '@/lib/types';
 import { GENRES } from '@/lib/constants';
 import { ObsidianHeader } from './ObsidianHeader';
@@ -10,7 +11,7 @@ import { VaultCarousel } from './VaultCarousel';
 import { ObsidianListRow } from './ObsidianListRow';
 import { ObsidianCard } from './ObsidianCard';
 import { AnimatePresence, motion } from 'framer-motion';
-import { LayoutGrid, List as ListIcon, Search, ChevronDown } from 'lucide-react';
+import { LayoutGrid, List as ListIcon, Search, ChevronDown, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface VaultDashboardProps {
