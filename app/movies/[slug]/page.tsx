@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { MovieDetailClient } from './MovieDetailClient';
 import { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
     const movies = await getMovies();
     return movies.map((movie) => ({
