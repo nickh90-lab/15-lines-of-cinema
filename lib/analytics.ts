@@ -34,7 +34,9 @@ export interface AnalyticsData {
     content: MovieEngagement[];
 }
 
-export function getSimulatedAnalytics(days: number = 30): AnalyticsData {
+import { Movie } from './types';
+
+export function getSimulatedAnalytics(movies: Movie[], days: number = 30): AnalyticsData {
     const today = new Date();
     const traffic: DailyStats[] = [];
 
@@ -63,9 +65,33 @@ export function getSimulatedAnalytics(days: number = 30): AnalyticsData {
         });
     }
 
-    // Dynamic Top Genre and Engagement for variety
-    const genres = ["Sci-Fi", "Noir", "Drama", "Action", "Documentary"];
-    const topGenre = genres[Math.floor(Math.random() * (days === -1 ? 2 : genres.length))];
+    // Dynamic Top Genre from real data
+    const allGenres = movies.flatMap(m => m.genres || []);
+    const genreCounts = allGenres.reduce((acc, g) => {
+        acc[g] = (acc[g] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    const topGenre = Object.entries(genreCounts)
+        .sort((a, b) => b[1] - a[1])[0]?.[0] || "Drama";
+
+    // Use actual movies for content engagement
+    const content: MovieEngagement[] = movies
+        .slice(0, 5) // Just take top 5 for the demo
+        .map((m, i) => {
+            const baseViews = 8000 - (i * 1200);
+            return {
+                title: m.title,
+                slug: m.slug,
+                views: Math.floor(baseViews * (actualDays / 30) * (0.8 + Math.random() * 0.4)),
+                avgTime: `${Math.floor(3 + Math.random() * 4)}m ${Math.floor(Math.random() * 60)}s`
+            };
+        });
+
+    // Fallback if no movies
+    if (content.length === 0) {
+        content.push({ title: "Welcome to 15 Lines", slug: "no-movies", views: 0, avgTime: "0m 0s" });
+    }
 
     return {
         kpis: {
@@ -76,19 +102,13 @@ export function getSimulatedAnalytics(days: number = 30): AnalyticsData {
         },
         traffic,
         geo: [
-            { country: "United States", views: 12450, percentage: 42 },
-            { country: "Netherlands", views: 4820, percentage: 16 },
+            { country: "Netherlands", views: 12450, percentage: 42 },
+            { country: "United States", views: 4820, percentage: 16 },
             { country: "United Kingdom", views: 3540, percentage: 12 },
-            { country: "Germany", views: 2360, percentage: 8 },
-            { country: "France", views: 1770, percentage: 6 },
+            { country: "Belgium", views: 2360, percentage: 8 },
+            { country: "Germany", views: 1770, percentage: 6 },
             { country: "Others", views: 4720, percentage: 16 }
         ],
-        content: [
-            { title: "Dune: Part Two", slug: "dune-part-two", views: Math.floor(8420 * (actualDays / 30)), avgTime: "5m 12s" },
-            { title: "Oppenheimer", slug: "oppenheimer", views: Math.floor(6150 * (actualDays / 30)), avgTime: "4m 45s" },
-            { title: "Blade Runner 2049", slug: "blade-runner-2049", views: Math.floor(4230 * (actualDays / 30)), avgTime: "6m 20s" },
-            { title: "La La Land", slug: "la-la-land", views: Math.floor(3890 * (actualDays / 30)), avgTime: "3m 55s" },
-            { title: "The Dark Knight", slug: "the-dark-knight", views: Math.floor(3120 * (actualDays / 30)), avgTime: "4m 10s" }
-        ]
+        content
     };
 }
