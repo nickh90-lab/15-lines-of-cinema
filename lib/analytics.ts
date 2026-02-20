@@ -93,21 +93,33 @@ export function getSimulatedAnalytics(movies: Movie[], days: number = 30): Analy
         content.push({ title: "Welcome to 15 Lines", slug: "no-movies", views: 0, avgTime: "0m 0s" });
     }
 
+    const movieCount = movies.length;
+    const viewMultiplier = Math.max(1, movieCount * 0.5); // More movies = more potential traffic in the simulation
+
+    // KPI logic
+    const totalViews = traffic.reduce((acc, curr) => acc + curr.views, 0) * viewMultiplier;
+    const avgSessionBase = 2.5 + Math.random() * 3;
+    const engagementBase = 58 + Math.random() * 15;
+
     return {
         kpis: {
-            totalViews: traffic.reduce((acc, curr) => acc + curr.views, 0),
-            avgSession: days === 7 ? "3m 45s" : "4m 32s",
-            engagementRate: days === 7 ? "62.1%" : "68.4%",
+            totalViews: Math.floor(totalViews),
+            avgSession: `${Math.floor(avgSessionBase)}m ${Math.floor(Math.random() * 60)}s`,
+            engagementRate: `${engagementBase.toFixed(1)}%`,
             topGenre
         },
-        traffic,
+        traffic: traffic.map(t => ({
+            ...t,
+            views: Math.floor(t.views * viewMultiplier),
+            sessions: Math.floor(t.sessions * viewMultiplier)
+        })),
         geo: [
-            { country: "Netherlands", views: 12450, percentage: 42 },
-            { country: "United States", views: 4820, percentage: 16 },
-            { country: "United Kingdom", views: 3540, percentage: 12 },
-            { country: "Belgium", views: 2360, percentage: 8 },
-            { country: "Germany", views: 1770, percentage: 6 },
-            { country: "Others", views: 4720, percentage: 16 }
+            { country: "Netherlands", views: Math.floor(totalViews * 0.45), percentage: 45 },
+            { country: "Belgium", views: Math.floor(totalViews * 0.20), percentage: 20 },
+            { country: "United States", views: Math.floor(totalViews * 0.15), percentage: 15 },
+            { country: "United Kingdom", views: Math.floor(totalViews * 0.10), percentage: 10 },
+            { country: "Germany", views: Math.floor(totalViews * 0.05), percentage: 5 },
+            { country: "Others", views: Math.floor(totalViews * 0.05), percentage: 5 }
         ],
         content
     };

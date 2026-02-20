@@ -22,6 +22,23 @@ export function AnalyticsDashboard({ data }: AnalyticsDashboardProps) {
 
     return (
         <div className="space-y-8 pb-12">
+            <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-2xl flex items-center justify-between gap-4 mb-4">
+                <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                    <p className="text-xs text-blue-200/60 font-medium">
+                        Live visitor tracking is active. Real-time stats are available in your Vercel Dashboard.
+                    </p>
+                </div>
+                <a
+                    href="https://vercel.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                    Open Vercel Dashboard →
+                </a>
+            </div>
+
             {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
