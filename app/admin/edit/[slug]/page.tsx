@@ -21,12 +21,23 @@ export default function EditMoviePage() {
         const text = e.target.value;
         setReviewText(text);
 
-        // Split by natural sentences (ending in . ! ?)
-        const sentences = text.match(/[^.!?]+[.!?]+/g)?.map(s => s.trim()) || [];
+        // Split into paragraphs first (by double newlines)
+        const paragraphs = text.split(/\n\s*\n/);
+        const allLines: string[] = [];
+
+        paragraphs.forEach((p, i) => {
+            // Split paragraph into sentences
+            const sentences = p.match(/[^.!?]+[.!?]+/g)?.map(s => s.trim()) || [];
+            allLines.push(...sentences);
+            // Add divider (empty string) between paragraphs, but not after the last one
+            if (i < paragraphs.length - 1) {
+                allLines.push("");
+            }
+        });
 
         setFormData(prev => ({
             ...prev,
-            review15Lines: sentences
+            review15Lines: allLines
         }));
     };
 

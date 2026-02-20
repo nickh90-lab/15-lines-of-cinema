@@ -270,7 +270,7 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                                 <h3 className="text-sm font-medium uppercase tracking-[0.3em] text-white/20 mb-6 font-sans">
                                     Synopsis
                                 </h3>
-                                <p className="text-sm md:text-base text-white/50 font-sans leading-relaxed tracking-wide">
+                                <p className="text-sm md:text-base text-white/50 font-sans leading-relaxed tracking-wide whitespace-pre-wrap">
                                     {movie.plot || movie.reviewShort || "No plot summary available."}
                                 </p>
                             </div>
@@ -329,7 +329,7 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                                         })()}
                                     </div>
                                 ) : (
-                                    <p className="text-xl text-gray-500 italic p-8 border border-white/10 rounded-xl leading-relaxed font-serif">
+                                    <p className="text-xl text-gray-500 italic p-8 border border-white/10 rounded-xl leading-relaxed font-serif whitespace-pre-wrap">
                                         {movie.reviewLong || "No review content available."}
                                     </p>
                                 )}
