@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getMovies, saveMovies, upsertMovie } from '@/lib/data';
 import { Movie } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid'; // Need to install uuid or just use random string
@@ -28,6 +29,8 @@ export async function POST(request: Request) {
         }
 
         await upsertMovie(newMovie);
+        revalidatePath('/');
+        revalidatePath('/admin');
         return NextResponse.json(newMovie);
     } catch (error) {
         console.error('API Error:', error);

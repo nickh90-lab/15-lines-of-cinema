@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { AdminLibraryClient } from '@/components/admin/AdminLibraryClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
     const movies = await getMovies();
 

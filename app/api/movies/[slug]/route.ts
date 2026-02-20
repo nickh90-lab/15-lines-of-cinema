@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getMovies, saveMovies } from '@/lib/data';
 import { Movie } from '@/lib/types';
 
@@ -42,6 +43,8 @@ export async function PUT(request: Request, props: { params: Promise<{ slug: str
 
         const { upsertMovie } = await import('@/lib/data');
         await upsertMovie(updatedMovie);
+        revalidatePath('/');
+        revalidatePath('/admin');
 
         return NextResponse.json(updatedMovie);
     } catch (error) {
@@ -57,6 +60,8 @@ export async function DELETE(request: Request, props: { params: Promise<{ slug: 
 
         const { deleteMovie } = await import('@/lib/data');
         await deleteMovie(slug);
+        revalidatePath('/');
+        revalidatePath('/admin');
 
         return NextResponse.json({ success: true });
     } catch (error) {
