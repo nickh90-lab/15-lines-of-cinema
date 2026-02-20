@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getMovies, saveMovies } from '@/lib/data';
+import { getMovies, saveMovies, upsertMovie } from '@/lib/data';
 import { Movie } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid'; // Need to install uuid or just use random string
 
@@ -27,10 +27,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Slug already exists' }, { status: 400 });
         }
 
-        // Use the new upsert helper which handles both DB and FS
-        const { upsertMovie } = await import('@/lib/data');
         await upsertMovie(newMovie);
-
         return NextResponse.json(newMovie);
     } catch (error) {
         console.error('API Error:', error);

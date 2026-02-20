@@ -108,31 +108,31 @@ export async function upsertMovie(movie: Movie): Promise<void> {
     if (process.env.POSTGRES_PRISMA_URL) {
         const payload = {
             slug: movie.slug,
-            title: movie.title,
-            year: movie.year,
-            director: movie.director,
-            posterUrl: movie.posterUrl,
-            backdropUrl: movie.backdropUrl,
-            rating: movie.rating,
-            reviewShort: movie.reviewShort,
-            reviewLong: movie.reviewLong,
-            plot: movie.plot,
-            review15Lines: movie.review15Lines,
-            genres: movie.genres,
-            duration: movie.duration,
-            certification: movie.certification,
-            spokenLanguages: movie.spokenLanguages,
-            trailerUrl: movie.trailerUrl,
-            streaming: movie.streaming,
+            title: movie.title || 'Untitled',
+            year: movie.year || new Date().getFullYear(),
+            director: movie.director || 'Unknown',
+            posterUrl: movie.posterUrl || '',
+            backdropUrl: movie.backdropUrl || null,
+            rating: movie.rating || 0,
+            reviewShort: movie.reviewShort || '',
+            reviewLong: movie.reviewLong || '',
+            plot: movie.plot || null,
+            review15Lines: movie.review15Lines || [],
+            genres: movie.genres || [],
+            duration: movie.duration || null,
+            certification: movie.certification || null,
+            spokenLanguages: movie.spokenLanguages || [],
+            trailerUrl: movie.trailerUrl || null,
+            streaming: movie.streaming || [],
 
-            // Flatten scores
-            storyScore: movie.technicalScores.story,
-            actingScore: movie.technicalScores.acting,
-            paceScore: movie.technicalScores.pace,
-            endingScore: movie.technicalScores.ending,
-            originalityScore: movie.technicalScores.originality,
+            // Flatten scores with fallbacks
+            storyScore: movie.technicalScores?.story ?? 0,
+            actingScore: movie.technicalScores?.acting ?? 0,
+            paceScore: movie.technicalScores?.pace ?? 0,
+            endingScore: movie.technicalScores?.ending ?? 0,
+            originalityScore: movie.technicalScores?.originality ?? 0,
 
-            cast: JSON.parse(JSON.stringify(movie.cast || []))
+            cast: movie.cast ? JSON.parse(JSON.stringify(movie.cast)) : []
         };
 
         await prisma.movie.upsert({
