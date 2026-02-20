@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { getSimulatedAnalytics } from '@/lib/analytics';
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { Movie } from '@/lib/types';
+import { AnalyticsData } from '@/lib/analytics';
 
 interface AnalyticsClientProps {
     movies: Movie[];
+    initialData: AnalyticsData;
+    initialDays: number;
 }
 
 const TIMEFRAMES = [
@@ -16,10 +19,12 @@ const TIMEFRAMES = [
     { label: 'All Time', days: -1 },
 ];
 
-export function AnalyticsClient({ movies }: AnalyticsClientProps) {
-    const [days, setDays] = useState(30);
+export function AnalyticsClient({ initialData, initialDays }: AnalyticsClientProps) {
+    const router = useRouter();
 
-    const data = useMemo(() => getSimulatedAnalytics(movies, days), [movies, days]);
+    const handleTimeframeChange = (days: number) => {
+        router.push(`/admin/analytics?days=${days}`);
+    };
 
     return (
         <div className="max-w-7xl mx-auto">
@@ -29,7 +34,7 @@ export function AnalyticsClient({ movies }: AnalyticsClientProps) {
                         Cinema Analytics
                     </h1>
                     <p className="text-white/40 flex items-center gap-2 text-sm font-medium">
-                        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                         Live insights from your cinematic library.
                     </p>
                 </div>
@@ -38,9 +43,9 @@ export function AnalyticsClient({ movies }: AnalyticsClientProps) {
                     {TIMEFRAMES.map((tf) => (
                         <button
                             key={tf.label}
-                            onClick={() => setDays(tf.days)}
-                            className={`px-5 py-2.5 rounded-xl text-xs font-black tracking-widest transition-all duration-300 ${days === tf.days
-                                ? 'bg-[#D4AF37] text-black shadow-[0_0_20px_rgba(212,175,55,0.3)]'
+                            onClick={() => handleTimeframeChange(tf.days)}
+                            className={`px-5 py-2.5 rounded-xl text-xs font-black tracking-widest transition-all duration-300 ${initialDays === tf.days
+                                ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]'
                                 : 'text-white/40 hover:text-white hover:bg-white/5'
                                 }`}
                         >
@@ -50,7 +55,7 @@ export function AnalyticsClient({ movies }: AnalyticsClientProps) {
                 </div>
             </div>
 
-            <AnalyticsDashboard data={data} />
+            <AnalyticsDashboard data={initialData} />
         </div>
     );
 }

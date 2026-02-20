@@ -4,6 +4,7 @@ import './globals.css';
 import { Navbar } from '@/components/ui/Navbar';
 import { cn } from '@/lib/utils';
 import { Analytics } from '@vercel/analytics/next';
+import { AnalyticsTracker } from '@/components/AnalyticsTracker';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -74,6 +75,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Analytics />
+        <AnalyticsTracker />
       </body>
     </html>
   );

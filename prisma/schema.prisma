@@ -43,3 +43,23 @@ model Movie {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
+
+model Analytics {
+  id        String   @id @default(uuid())
+  path      String   @unique
+  views     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+model DailyStats {
+  date      String   @id // FORMAT: YYYY-MM-DD
+  views     Int      @default(0)
+  sessions  Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+model CountryStats {
+  country   String   @id
+  views     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
