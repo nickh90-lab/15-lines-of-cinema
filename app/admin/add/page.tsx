@@ -172,11 +172,12 @@ export default function AddMoviePage() {
                 router.push('/admin');
                 router.refresh();
             } else {
-                alert('Error creating movie');
+                const errorData = await res.json();
+                alert(`Error creating movie: ${errorData.error || 'Unknown error'}`);
             }
         } catch (error) {
             console.error(error);
-            alert('Error creating movie');
+            alert(`Network error creating movie: ${error instanceof Error ? error.message : String(error)}`);
         } finally {
             setLoading(false);
         }

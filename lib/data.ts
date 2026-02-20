@@ -125,7 +125,6 @@ export async function upsertMovie(movie: Movie): Promise<void> {
             trailerUrl: movie.trailerUrl || null,
             streaming: movie.streaming || [],
 
-            // Flatten scores with fallbacks
             storyScore: movie.technicalScores?.story ?? 0,
             actingScore: movie.technicalScores?.acting ?? 0,
             paceScore: movie.technicalScores?.pace ?? 0,
@@ -135,11 +134,19 @@ export async function upsertMovie(movie: Movie): Promise<void> {
             cast: movie.cast ? JSON.parse(JSON.stringify(movie.cast)) : []
         };
 
-        await prisma.movie.upsert({
-            where: { slug: movie.slug },
-            update: payload,
-            create: payload
-        });
+        try {
+            await prisma.movie.upsert({
+                where: { slug: movie.slug },
+                update: payload,
+                create: {
+                    ...payload,
+                    id: movie.id // Ensure we use the ID from the frontend if possible
+                }
+            });
+        } catch (e) {
+            console.error("Prisma Upsert Error Details:", e);
+            throw e; // Rethrow to be caught by API route
+        }
 
         if (process.env.NODE_ENV === 'production') return;
     }

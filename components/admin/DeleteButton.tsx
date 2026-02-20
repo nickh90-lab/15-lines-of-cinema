@@ -20,11 +20,12 @@ export function DeleteButton({ slug }: { slug: string }) {
             if (res.ok) {
                 router.refresh();
             } else {
-                alert('Failed to delete movie');
+                const data = await res.json();
+                alert(`Fout bij verwijderen: ${data.error || 'Onbekende fout'}`);
             }
         } catch (error) {
             console.error('Error deleting movie:', error);
-            alert('Error deleting movie');
+            alert(`Systeemfout bij verwijderen: ${error instanceof Error ? error.message : String(error)}`);
         } finally {
             setIsDeleting(false);
         }

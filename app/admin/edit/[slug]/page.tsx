@@ -158,11 +158,12 @@ export default function EditMoviePage() {
                 router.push('/admin');
                 router.refresh();
             } else {
-                alert('Error updating movie');
+                const errorData = await res.json();
+                alert(`Error updating movie: ${errorData.error || 'Unknown error'}`);
             }
         } catch (error) {
             console.error(error);
-            alert('Error updating movie');
+            alert(`Network error updating movie: ${error instanceof Error ? error.message : String(error)}`);
         } finally {
             setLoading(false);
         }
