@@ -91,7 +91,7 @@ export async function getMovieBySlug(slug: string): Promise<Movie | undefined> {
 
 export async function saveMovies(movies: Movie[]): Promise<void> {
     // Skip local backup in production to avoid read-only FS errors
-    if (process.env.NODE_ENV === 'production' && process.env.POSTGRES_PRISMA_URL) {
+    if (process.env.NODE_ENV === 'production') {
         return;
     }
 
@@ -141,7 +141,6 @@ export async function upsertMovie(movie: Movie): Promise<void> {
             create: payload
         });
 
-        // Skip local backup in production to avoid read-only FS errors
         if (process.env.NODE_ENV === 'production') return;
     }
 
@@ -154,4 +153,20 @@ export async function upsertMovie(movie: Movie): Promise<void> {
         currentMovies.push(movie);
     }
     await saveMovies(currentMovies);
+}
+
+export async function deleteMovie(slug: string): Promise<void> {
+    if (process.env.POSTGRES_PRISMA_URL) {
+        try {
+            await prisma.movie.delete({ where: { slug } });
+        } catch (e) {
+            console.error("Prisma Delete Error", e);
+            // If it doesn't exist in DB, maybe it only exists in FS? Continue to FS if not production
+        }
+        if (process.env.NODE_ENV === 'production') return;
+    }
+
+    const movies = await getMovies();
+    const filtered = movies.filter(m => m.slug !== slug);
+    await saveMovies(filtered);
 }

@@ -54,25 +54,10 @@ export async function DELETE(request: Request, props: { params: Promise<{ slug: 
     try {
         const params = await props.params;
         const slug = params.slug;
-        const movies = await getMovies();
-        const filteredMovies = movies.filter(m => m.slug !== slug);
 
-        if (movies.length === filteredMovies.length) {
-            return NextResponse.json({ error: 'Movie not found' }, { status: 404 });
-        }
+        const { deleteMovie } = await import('@/lib/data');
+        await deleteMovie(slug);
 
-        // DELETE from DB if available
-        if (process.env.POSTGRES_PRISMA_URL) {
-            // We use the established pattern to ensure we use the centralized Prisma connection
-            const { prisma } = await import('@/lib/data');
-            try {
-                await (prisma as any).movie.delete({ where: { slug } });
-            } catch (e) {
-                console.error("DB Delete Error", e);
-            }
-        }
-
-        await saveMovies(filteredMovies);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error('API Error:', error);
