@@ -3,6 +3,7 @@ import { Outfit, Inter } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/ui/Navbar';
 import { cn } from '@/lib/utils';
+import { Analytics } from '@vercel/analytics/react';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -72,6 +73,7 @@ export default function RootLayout({
 
         <Navbar />
         {children}
+        <Analytics />
       </body>
     </html>
   );
