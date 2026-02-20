@@ -294,9 +294,14 @@ export default function EditMoviePage() {
                                 <div className="flex justify-between items-center mb-4">
                                     <label className={labelClass}>The 15 Lines (Main Review)</label>
                                     <div className="flex items-center gap-2">
-                                        <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded bg-black/40 border ${(formData.review15Lines?.length || 0) === 15 ? 'text-green-500 border-green-500/20' : 'text-red-500 border-red-500/20'}`}>
-                                            {formData.review15Lines?.length || 0}/15 SENTENCES
-                                        </span>
+                                        {(() => {
+                                            const sentenceCount = (formData.review15Lines?.filter(line => line.trim() !== '') || []).length;
+                                            return (
+                                                <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded bg-black/40 border ${sentenceCount === 15 ? 'text-green-500 border-green-500/20' : 'text-red-500 border-red-500/20'}`}>
+                                                    {sentenceCount}/15 SENTENCES
+                                                </span>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                                 <textarea
@@ -365,7 +370,7 @@ export default function EditMoviePage() {
                         </Link>
                         <button
                             type="submit"
-                            disabled={loading || (formData.review15Lines?.length || 0) !== 15}
+                            disabled={loading || (formData.review15Lines?.filter(line => line.trim() !== '') || []).length !== 15}
                             className="px-10 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/80 transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-xl shadow-white/5"
                         >
                             {loading ? 'Saving...' : 'Save & Publish'}
