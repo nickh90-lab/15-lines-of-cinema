@@ -4,6 +4,7 @@ export interface TechnicalScores {
   pace: number;
   ending: number;
   originality: number;
+  audiovisual: number;
 }
 
 export interface CastMember {

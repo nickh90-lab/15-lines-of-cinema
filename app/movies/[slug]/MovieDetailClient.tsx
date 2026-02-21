@@ -27,6 +27,7 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
         { label: 'Pace', value: movie.technicalScores.pace },
         { label: 'Ending', value: movie.technicalScores.ending },
         { label: 'Originality', value: movie.technicalScores.originality },
+        { label: 'Audiovisual', value: movie.technicalScores.audiovisual },
     ];
 
     return (

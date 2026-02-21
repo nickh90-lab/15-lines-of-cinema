@@ -32,7 +32,8 @@ export async function getMovies(): Promise<Movie[]> {
                     acting: m.actingScore,
                     pace: m.paceScore,
                     ending: m.endingScore,
-                    originality: m.originalityScore
+                    originality: m.originalityScore,
+                    audiovisual: m.audiovisualScore,
                 },
                 releaseDate: m.createdAt.toISOString(), // Or separate field if we added it, but type requires it
                 createdAt: m.createdAt.toISOString()
@@ -128,8 +129,9 @@ export async function upsertMovie(movie: Movie): Promise<void> {
             storyScore: Number(movie.technicalScores?.story ?? 0),
             actingScore: Number(movie.technicalScores?.acting ?? 0),
             paceScore: Number(movie.technicalScores?.pace ?? 0),
-            endingScore: Number(movie.technicalScores?.ending ?? 0),
-            originalityScore: Number(movie.technicalScores?.originality ?? 0),
+            endingScore: movie.technicalScores?.ending || 0,
+            originalityScore: movie.technicalScores?.originality || 0,
+            audiovisualScore: movie.technicalScores?.audiovisual || 0,
 
             cast: movie.cast ? JSON.parse(JSON.stringify(movie.cast)) : []
         };

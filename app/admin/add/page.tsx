@@ -27,7 +27,8 @@ export default function AddMoviePage() {
             acting: 8,
             pace: 8,
             ending: 8,
-            originality: 8
+            originality: 8,
+            audiovisual: 0
         },
         cast: []
     });
@@ -157,12 +158,9 @@ export default function AddMoviePage() {
             // Ensure rating is exactly the average of technical scores
             let finalRating = formData.rating;
             if (formData.technicalScores) {
-                const scores = Object.values(formData.technicalScores);
-                if (scores.length > 0) {
-                    const sum = scores.reduce((a, b) => a + b, 0);
-                    const avg = sum / scores.length;
-                    finalRating = Math.round(avg * 10) / 10;
-                }
+                const scores = formData.technicalScores;
+                const rating = (scores.story + scores.acting + scores.pace + scores.ending + scores.originality + scores.audiovisual) / 6;
+                finalRating = Math.round(rating * 10) / 10;
             }
 
             const payload = {
@@ -373,19 +371,26 @@ export default function AddMoviePage() {
                             Technical Breakdown
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {Object.keys(formData.technicalScores!).map(key => (
-                                <div key={key}>
+                            {[
+                                { label: 'Story', key: 'story' },
+                                { label: 'Acting', key: 'acting' },
+                                { label: 'Pace', key: 'pace' },
+                                { label: 'Ending', key: 'ending' },
+                                { label: 'Originality', key: 'originality' },
+                                { label: 'Audiovisual', key: 'audiovisual' },
+                            ].map((score) => (
+                                <div key={score.key}>
                                     <div className="flex justify-between mb-3">
-                                        <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">{key}</label>
-                                        <span className="font-black text-accent">{formData.technicalScores![key as keyof TechnicalScores]}</span>
+                                        <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/40">{score.label}</label>
+                                        <span className="font-black text-accent">{formData.technicalScores![score.key as keyof TechnicalScores]}</span>
                                     </div>
                                     <input
                                         type="range"
                                         min="0"
                                         max="10"
                                         step="0.1"
-                                        name={`tech_${key}`}
-                                        value={formData.technicalScores![key as keyof TechnicalScores]}
+                                        name={`tech_${score.key}`}
+                                        value={formData.technicalScores![score.key as keyof TechnicalScores]}
                                         onChange={handleChange}
                                         className="w-full h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-accent"
                                     />

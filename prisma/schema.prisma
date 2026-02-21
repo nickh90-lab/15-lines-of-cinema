@@ -32,6 +32,7 @@ model Movie {
   paceScore        Float    @default(0)
   endingScore      Float    @default(0)
   originalityScore Float    @default(0)
+  audiovisualScore Int      @default(0)
 
   // Cast (stored as JSON for simplicity in V1, or separate relation? Relation is cleaner but JSON is easier for migration)
   // Let's use a JSON field for Cast to keep it similar to current structure and avoid complexity
