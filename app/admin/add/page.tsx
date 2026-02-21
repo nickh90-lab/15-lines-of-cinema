@@ -111,9 +111,9 @@ export default function AddMoviePage() {
                     [key]: newValue
                 };
 
-                // Calculate average
+                // Calculate average across 6 pillars
                 const sum = Object.values(newTechScores).reduce((a, b) => a + b, 0);
-                const avg = sum / 4;
+                const avg = sum / 6;
                 const roundedAvg = Math.round(avg * 10) / 10; // Round to 1 decimal
 
                 return {

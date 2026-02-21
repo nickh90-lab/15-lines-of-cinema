@@ -73,7 +73,8 @@ export async function getMovieBySlug(slug: string): Promise<Movie | undefined> {
                         acting: movie.actingScore,
                         pace: movie.paceScore,
                         ending: movie.endingScore,
-                        originality: movie.originalityScore
+                        originality: movie.originalityScore,
+                        audiovisual: movie.audiovisualScore,
                     },
                     releaseDate: movie.createdAt.toISOString(),
                     createdAt: movie.createdAt.toISOString()

@@ -106,7 +106,7 @@ export async function POST(req: Request) {
             rating: 8.0,
 
 
-            technicalScores: { story: 8, acting: 8, pace: 8, ending: 8, originality: 8 }
+            technicalScores: { story: 8, acting: 8, pace: 8, ending: 8, originality: 8, audiovisual: 8 }
         };
 
         return NextResponse.json(mappedMovie);

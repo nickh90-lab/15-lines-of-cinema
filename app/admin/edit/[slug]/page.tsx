@@ -48,17 +48,16 @@ export default function EditMoviePage() {
                 if (!res.ok) throw new Error('Failed to fetch movie');
                 const data = await res.json();
                 // Ensure new fields exist for legacy data
-                const defaults = { story: 0, acting: 0, pace: 0, ending: 0, originality: 0 };
+                const defaults = { story: 0, acting: 0, pace: 0, ending: 0, originality: 0, audiovisual: 0 };
                 const mergedScores = { ...defaults, ...data.technicalScores };
 
-                // Remove legacy keys if we want to force cleanup, or keep them. 
-                // For UI clarity, let's construct the object explicitly with only the new keys.
                 const cleanScores = {
                     story: mergedScores.story,
                     acting: mergedScores.acting,
-                    pace: mergedScores.pace || mergedScores.cinematography || 5, // Fallback if you want, or just 0
+                    pace: mergedScores.pace || 5,
                     ending: mergedScores.ending || 5,
-                    originality: mergedScores.originality || 5
+                    originality: mergedScores.originality || 5,
+                    audiovisual: mergedScores.audiovisual || 0
                 };
 
                 setFormData({ ...data, technicalScores: cleanScores });
