@@ -50,6 +50,31 @@ export default async function MoviePage({ params }: { params: Promise<{ slug: st
         notFound();
     }
 
+    // --- Similarity Algorithm ---
+    const allMovies = await getMovies();
+    const similarMovies = allMovies
+        .filter(m => m.slug !== movie.slug) // Exclude current
+        .map(m => {
+            let score = 0;
+
+            // 1. Genre Overlap (+5 per match)
+            const sharedGenres = m.genres.filter(g => movie.genres.includes(g));
+            score += sharedGenres.length * 5;
+
+            // 2. Director Match (+12)
+            if (m.director === movie.director) {
+                score += 12;
+            }
+
+            // 3. Quality Bonus (+rating)
+            score += m.rating;
+
+            return { movie: m, score };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 4)
+        .map(item => item.movie);
+
     // JSON-LD for Rich Results
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -86,7 +111,7 @@ export default async function MoviePage({ params }: { params: Promise<{ slug: st
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <MovieDetailClient movie={movie} />
+            <MovieDetailClient movie={movie} similarMovies={similarMovies} />
         </>
     );
 }

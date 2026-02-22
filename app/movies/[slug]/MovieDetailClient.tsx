@@ -9,14 +9,16 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrailerModal } from '@/components/movies/TrailerModal';
 import { getScoreColor } from '@/lib/colors';
+import { ObsidianCard } from '@/components/ObsidianCard';
 
 // Helper for dynamic score colors
 
 interface MovieDetailClientProps {
     movie: Movie;
+    similarMovies?: Movie[];
 }
 
-export function MovieDetailClient({ movie }: MovieDetailClientProps) {
+export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClientProps) {
     const [isTrailerOpen, setIsTrailerOpen] = useState(false);
     const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [isReadingMode, setIsReadingMode] = useState(false);
@@ -383,6 +385,36 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                     </motion.div>
                 </div>
             </main>
+
+            {/* --- 4. SIMILAR MOVIES --- */}
+            {similarMovies.length > 0 && (
+                <section className="container mx-auto px-6 md:px-12 py-20 border-t border-white/5">
+                    <div className="flex items-center justify-between mb-12">
+                        <div className="flex flex-col gap-2">
+                            <h2 className="text-sm font-medium tracking-[0.3em] uppercase text-white/40 font-sans">
+                                Discovery
+                            </h2>
+                            <h3 className="text-2xl md:text-3xl font-black font-heading tracking-tight italic">
+                                Similar Movies
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                        {similarMovies.map((m, idx) => (
+                            <motion.div
+                                key={m.slug}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                            >
+                                <ObsidianCard movie={m} />
+                            </motion.div>
+                        ))}
+                    </div>
+                </section>
+            )}
         </div>
     );
 }
