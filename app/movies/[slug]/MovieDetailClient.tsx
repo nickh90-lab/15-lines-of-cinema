@@ -71,18 +71,19 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                 </div>
 
                 {/* Title & Metadata with Poster */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 pb-12 bg-gradient-to-t from-[#050505] to-transparent">
-                    <div className="container mx-auto px-6 md:px-12 max-w-7xl">
-                        <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-8 items-end">
+                <div className="absolute bottom-0 left-0 right-0 p-6 pt-24 pb-8 md:p-8 md:pb-12 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent">
+                    <div className="container mx-auto px-4 md:px-12 max-w-7xl">
+                        <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6 md:gap-8 items-end">
                             {/* Left: Metadata */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
+                                className="w-full"
                             >
-                                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black font-heading tracking-tight text-white leading-none mb-4">
+                                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black font-heading tracking-tight text-white leading-[1.1] mb-3 md:mb-4 break-words">
                                     {movie.title}
                                 </h1>
-                                <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm md:text-base font-medium text-white/60 uppercase tracking-widest">
+                                <div className="flex flex-wrap items-center gap-3 md:gap-6 text-xs md:text-base font-medium text-white/60 uppercase tracking-widest leading-relaxed">
                                     <span>{movie.year}</span>
                                     <span className="w-1 h-1 rounded-full bg-white/30" />
                                     <span>{movie.director}</span>

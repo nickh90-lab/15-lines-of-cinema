@@ -79,7 +79,7 @@ export function ObsidianHero({ movies }: ObsidianHeroProps) {
             </AnimatePresence>
 
             {/* Content Container */}
-            <div className="relative z-10 h-full max-w-[1400px] mx-auto px-6 flex flex-col justify-end pb-32">
+            <div className="relative z-10 h-full max-w-[1400px] mx-auto px-6 flex flex-col justify-end pb-24 md:pb-32 pt-28">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={`hero-content-${currentMovie.id}`}
@@ -90,7 +90,7 @@ export function ObsidianHero({ movies }: ObsidianHeroProps) {
                         className="max-w-3xl"
                     >
                         {/* Title */}
-                        <h1 className="font-heading font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight text-white mb-6 drop-shadow-2xl">
+                        <h1 className="font-heading font-bold text-3xl sm:text-5xl md:text-7xl lg:text-8xl tracking-tight text-white leading-[1.1] mb-4 md:mb-6 drop-shadow-2xl break-words">
                             {currentMovie.title}
                         </h1>
 
