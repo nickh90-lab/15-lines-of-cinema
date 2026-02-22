@@ -40,8 +40,8 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                 trailerUrl={movie.trailerUrl || ''}
             />
 
-            {/* --- 1. IDENTITY HEADER (35vh) --- */}
-            <header className="relative w-full h-[40vh] md:h-[50vh] overflow-hidden bg-black">
+            {/* --- 1. IDENTITY HEADER --- */}
+            <header className="relative w-full min-h-[55vh] md:min-h-[65vh] flex flex-col justify-end overflow-hidden bg-black pb-0">
                 {/* Backdrop */}
                 {/* Static Backdrop - No motion */}
                 <div className="absolute inset-0">
@@ -64,7 +64,7 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
 
                 {/* Back Link */}
-                <div className="absolute top-32 left-8 z-50">
+                <div className="absolute top-24 left-4 md:top-32 md:left-8 z-50">
                     <Link
                         href="/"
                         className="group flex items-center gap-3 text-white/50 hover:text-white transition-colors"
@@ -77,7 +77,7 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                 </div>
 
                 {/* Title & Metadata with Poster */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 pt-24 pb-8 md:p-8 md:pb-12 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent">
+                <div className="relative z-10 w-full mt-24 p-6 pt-28 pb-8 md:p-8 md:pt-40 md:pb-12 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent">
                     <div className="container mx-auto px-4 md:px-12 max-w-7xl">
                         <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6 md:gap-8 items-end">
                             {/* Left: Metadata */}
