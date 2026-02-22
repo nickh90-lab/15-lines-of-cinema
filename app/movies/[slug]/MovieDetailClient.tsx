@@ -18,6 +18,8 @@ interface MovieDetailClientProps {
 
 export function MovieDetailClient({ movie }: MovieDetailClientProps) {
     const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+    const [isReadingMode, setIsReadingMode] = useState(false);
     const prestigeColor = getScoreColor(movie.rating);
 
     // Helper for technical scores
@@ -39,7 +41,7 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
             />
 
             {/* --- 1. IDENTITY HEADER (35vh) --- */}
-            <header className="relative w-full h-[40vh] md:h-[50vh] overflow-hidden">
+            <header className="relative w-full h-[40vh] md:h-[50vh] overflow-hidden bg-black">
                 {/* Backdrop */}
                 {/* Static Backdrop - No motion */}
                 <div className="absolute inset-0">
@@ -48,8 +50,12 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                         alt={movie.title}
                         fill
                         priority
-                        className="object-cover object-center"
+                        className={cn(
+                            "object-cover object-center transition-opacity duration-1000",
+                            isImageLoaded ? "opacity-100" : "opacity-0"
+                        )}
                         sizes="100vw"
+                        onLoad={() => setIsImageLoaded(true)}
                     />
                 </div>
 
@@ -114,20 +120,20 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
 
                                 {/* Cast List - Minimalist Redesign */}
                                 {movie.cast && movie.cast.length > 0 && (
-                                    <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+                                    <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 group/cast">
                                         {movie.cast.slice(0, 6).map(member => (
-                                            <div key={member.name} className="group flex items-center gap-3 cursor-default">
+                                            <div key={member.name} className="group/member flex items-center gap-3 cursor-default transition-all duration-300 hover:!opacity-100 group-hover/cast:opacity-30">
                                                 {/* Avatar */}
-                                                <div className="relative w-9 h-9 rounded-full overflow-hidden bg-white/5 ring-1 ring-white/10 group-hover:ring-white/30 transition-all duration-300">
+                                                <div className="relative w-9 h-9 rounded-full overflow-hidden bg-white/5 ring-1 ring-white/10 group-hover/member:ring-white/30 transition-all duration-300">
                                                     {member.imageUrl ? (
                                                         <img
                                                             src={member.imageUrl}
                                                             alt={member.name}
-                                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 will-change-filter"
+                                                            className="w-full h-full object-cover grayscale group-hover/member:grayscale-0 transition-all duration-500 will-change-filter"
                                                             loading="lazy"
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a] text-xs font-bold text-white/30 group-hover:text-white/60 transition-colors">
+                                                        <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a] text-xs font-bold text-white/30 group-hover/member:text-white/60 transition-colors">
                                                             {member.name.charAt(0)}
                                                         </div>
                                                     )}
@@ -135,7 +141,7 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
 
                                                 {/* Name & Role */}
                                                 <div className="flex flex-col">
-                                                    <span className="text-xs font-medium text-white/50 group-hover:text-white transition-colors duration-300 leading-none mb-0.5">
+                                                    <span className="text-xs font-medium text-white/50 group-hover/member:text-white transition-colors duration-300 leading-none mb-0.5">
                                                         {member.name}
                                                     </span>
                                                     {/* Optional Role Tooltip/Subtext - Minimalist means maybe hide role or very subtle */}
@@ -152,8 +158,15 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="hidden md:flex md:flex-col md:gap-4"
                             >
-                                <div className="relative aspect-[2/3] w-full rounded-lg overflow-hidden shadow-2xl border border-white/20">
-                                    <img src={movie.posterUrl} alt={movie.title} className="w-full h-full object-cover" />
+                                <div className="relative aspect-[2/3] w-full rounded-lg overflow-hidden shadow-2xl border border-white/20 bg-white/5">
+                                    <img
+                                        src={movie.posterUrl}
+                                        alt={movie.title}
+                                        className={cn(
+                                            "w-full h-full object-cover transition-opacity duration-1000",
+                                            isImageLoaded ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
                                 </div>
                                 {movie.trailerUrl && (
                                     <button
@@ -280,19 +293,40 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                     </aside>
 
                     {/* RIGHT: THE REVIEW */}
-                    <div className="space-y-12">
-                        <h2 className="text-sm font-medium tracking-[0.3em] uppercase text-white/40 mb-10 font-sans">
-                            The Review
-                        </h2>
+                    <motion.div
+                        layout
+                        className={cn(
+                            "space-y-12 transition-all duration-700",
+                            isReadingMode ? "lg:col-span-2 lg:max-w-4xl lg:mx-auto w-full" : ""
+                        )}
+                    >
+                        <div className="flex items-center justify-between mb-10">
+                            <h2 className="text-sm font-medium tracking-[0.3em] uppercase text-white/40 font-sans">
+                                The Review
+                            </h2>
+                            <button
+                                onClick={() => setIsReadingMode(!isReadingMode)}
+                                className={cn(
+                                    "flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300 text-xs font-medium tracking-widest uppercase",
+                                    isReadingMode
+                                        ? "bg-white text-black border-white"
+                                        : "bg-transparent text-white/40 border-white/10 hover:border-white/30 hover:text-white"
+                                )}
+                            >
+                                <span className="font-serif italic text-sm">Aa</span>
+                                <span>Reading Mode</span>
+                            </button>
+                        </div>
 
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
+                            layout
                         >
                             <div className="prose prose-invert max-w-none">
                                 {movie.review15Lines && movie.review15Lines.length > 0 ? (
-                                    <div className="space-y-6">
+                                    <div className="space-y-8">
                                         {(() => {
                                             const paragraphs: string[][] = [[]];
                                             movie.review15Lines!.forEach(line => {
@@ -311,21 +345,30 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                                                     const firstChar = paragraphText.charAt(0);
                                                     const restOfText = paragraphText.slice(1);
                                                     return (
-                                                        <p key={i} className="text-lg md:text-xl text-white/70 font-serif leading-relaxed tracking-wide mb-8 last:mb-0">
+                                                        <motion.p layout key={i} className={cn(
+                                                            "text-white/80 font-serif tracking-wide transition-all duration-700",
+                                                            isReadingMode ? "text-2xl md:text-3xl leading-[1.7]" : "text-lg md:text-xl leading-relaxed"
+                                                        )}>
                                                             <span
-                                                                className="float-left text-6xl md:text-7xl font-bold mr-4 mt-2 line-height-none"
+                                                                className={cn(
+                                                                    "float-left font-bold mr-4 mt-2 line-height-none transition-all duration-700",
+                                                                    isReadingMode ? "text-7xl md:text-8xl" : "text-6xl md:text-7xl"
+                                                                )}
                                                                 style={{ color: prestigeColor.primary }}
                                                             >
                                                                 {firstChar}
                                                             </span>
                                                             {restOfText}
-                                                        </p>
+                                                        </motion.p>
                                                     );
                                                 }
                                                 return (
-                                                    <p key={i} className="text-lg md:text-xl text-white/70 font-serif leading-relaxed tracking-wide mb-8 last:mb-0">
+                                                    <motion.p layout key={i} className={cn(
+                                                        "text-white/80 font-serif tracking-wide transition-all duration-700",
+                                                        isReadingMode ? "text-2xl md:text-3xl leading-[1.7]" : "text-lg md:text-xl leading-relaxed"
+                                                    )}>
                                                         {paragraphText}
-                                                    </p>
+                                                    </motion.p>
                                                 );
                                             });
                                         })()}
@@ -337,10 +380,9 @@ export function MovieDetailClient({ movie }: MovieDetailClientProps) {
                                 )}
                             </div>
                         </motion.div>
-                    </div>
-
+                    </motion.div>
                 </div>
             </main>
-        </div >
+        </div>
     );
 }

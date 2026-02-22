@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 import { Movie } from '@/lib/types';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -13,6 +14,8 @@ interface ObsidianListRowProps {
 }
 
 export function ObsidianListRow({ movie, index }: ObsidianListRowProps) {
+    const [isLoaded, setIsLoaded] = useState(false);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -24,12 +27,16 @@ export function ObsidianListRow({ movie, index }: ObsidianListRowProps) {
                 className="group flex items-center gap-6 p-4 rounded-xl border border-transparent hover:bg-white/5 hover:border-white/5 transition-all duration-200"
             >
                 {/* 1. Tiny Poster */}
-                <div className="relative w-10 h-14 rounded overflow-hidden shadow-sm shrink-0">
+                <div className="relative w-10 h-14 rounded overflow-hidden shadow-sm shrink-0 bg-white/5">
                     <Image
                         src={movie.posterUrl}
                         alt={movie.title}
                         fill
-                        className="object-cover"
+                        className={cn(
+                            "object-cover transition-all duration-500",
+                            isLoaded ? "opacity-100 blur-0" : "opacity-0 blur-sm"
+                        )}
+                        onLoad={() => setIsLoaded(true)}
                     />
                 </div>
 

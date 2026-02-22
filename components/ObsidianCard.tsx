@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Movie } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface ObsidianCardProps {
@@ -12,20 +13,26 @@ interface ObsidianCardProps {
 }
 
 export function ObsidianCard({ movie, className }: ObsidianCardProps) {
+    const [isLoaded, setIsLoaded] = useState(false);
+
     return (
         <Link href={`/movies/${movie.slug}`} className={cn("group block relative", className)}>
             <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="relative aspect-[2/3] rounded-xl overflow-hidden bg-card border border-white/5 group-hover:border-white/20 transition-colors"
+                className="relative aspect-[2/3] rounded-xl overflow-hidden bg-white/5 border border-white/5 group-hover:border-white/20 transition-colors"
             >
                 {/* Poster Image */}
                 <Image
                     src={movie.posterUrl}
                     alt={movie.title}
                     fill
-                    className="object-cover transition-all duration-500 group-hover:brightness-110"
+                    className={cn(
+                        "object-cover transition-all duration-700 group-hover:brightness-110",
+                        isLoaded ? "opacity-100 blur-0" : "opacity-0 blur-md"
+                    )}
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                    onLoad={() => setIsLoaded(true)}
                 />
 
                 {/* Internal Glow (Top highlight) */}
