@@ -95,7 +95,7 @@ export function ObsidianHero({ movies }: ObsidianHeroProps) {
                         </h1>
 
                         {/* Meta */}
-                        <div className="flex items-center gap-4 text-white/60 text-lg mb-8 font-medium">
+                        <div className="flex items-center gap-4 text-white/60 text-base md:text-lg mb-6 md:mb-8 font-medium">
                             <span className="text-white font-semibold">{currentMovie.year}</span>
                             <span>•</span>
                             <span>{currentMovie.genres?.[0]}</span>
@@ -107,7 +107,7 @@ export function ObsidianHero({ movies }: ObsidianHeroProps) {
                         </div>
 
                         {/* Description */}
-                        <p className="text-xl text-white/70 line-clamp-3 mb-10 max-w-2xl leading-relaxed font-light">
+                        <p className="text-lg md:text-xl text-white/70 line-clamp-3 mb-8 md:mb-10 max-w-2xl leading-relaxed font-light">
                             {currentMovie.reviewShort || currentMovie.review15Lines?.[0]}
                         </p>
 

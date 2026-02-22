@@ -122,11 +122,11 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
 
                                 {/* Cast List - Minimalist Redesign */}
                                 {movie.cast && movie.cast.length > 0 && (
-                                    <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 group/cast">
+                                    <div className="mt-8 flex flex-wrap items-center gap-x-4 md:gap-x-6 gap-y-4 group/cast">
                                         {movie.cast.slice(0, 6).map(member => (
-                                            <div key={member.name} className="group/member flex items-center gap-3 cursor-default transition-all duration-300 hover:!opacity-100 group-hover/cast:opacity-30">
+                                            <div key={member.name} className="group/member flex items-center gap-2 md:gap-3 cursor-default transition-all duration-300 hover:!opacity-100 group-hover/cast:opacity-30">
                                                 {/* Avatar */}
-                                                <div className="relative w-9 h-9 rounded-full overflow-hidden bg-white/5 ring-1 ring-white/10 group-hover/member:ring-white/30 transition-all duration-300">
+                                                <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full overflow-hidden bg-white/5 ring-1 ring-white/10 group-hover/member:ring-white/30 transition-all duration-300">
                                                     {member.imageUrl ? (
                                                         <img
                                                             src={member.imageUrl}
@@ -135,7 +135,7 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                                             loading="lazy"
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a] text-xs font-bold text-white/30 group-hover/member:text-white/60 transition-colors">
+                                                        <div className="w-full h-full flex items-center justify-center bg-[#1a1a1a] text-[10px] md:text-xs font-bold text-white/30 group-hover/member:text-white/60 transition-colors">
                                                             {member.name.charAt(0)}
                                                         </div>
                                                     )}
@@ -349,12 +349,12 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                                     return (
                                                         <motion.p layout key={i} className={cn(
                                                             "text-white/80 font-serif tracking-wide transition-all duration-700",
-                                                            isReadingMode ? "text-2xl md:text-3xl leading-[1.7]" : "text-lg md:text-xl leading-relaxed"
+                                                            isReadingMode ? "text-xl md:text-3xl leading-[1.8]" : "text-lg md:text-xl leading-relaxed"
                                                         )}>
                                                             <span
                                                                 className={cn(
-                                                                    "float-left font-bold mr-4 mt-2 line-height-none transition-all duration-700",
-                                                                    isReadingMode ? "text-7xl md:text-8xl" : "text-6xl md:text-7xl"
+                                                                    "float-left font-bold mr-4 mt-1 transition-all duration-700",
+                                                                    isReadingMode ? "text-6xl md:text-8xl" : "text-5xl md:text-7xl"
                                                                 )}
                                                                 style={{ color: prestigeColor.primary }}
                                                             >
@@ -367,7 +367,7 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                                 return (
                                                     <motion.p layout key={i} className={cn(
                                                         "text-white/80 font-serif tracking-wide transition-all duration-700",
-                                                        isReadingMode ? "text-2xl md:text-3xl leading-[1.7]" : "text-lg md:text-xl leading-relaxed"
+                                                        isReadingMode ? "text-xl md:text-3xl leading-[1.8]" : "text-lg md:text-xl leading-relaxed"
                                                     )}>
                                                         {paragraphText}
                                                     </motion.p>
