@@ -5,8 +5,11 @@ import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
+import { usePathname } from 'next/navigation';
+
 export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -15,6 +18,11 @@ export function Navbar() {
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Verberg de navbar op /admin en onderliggende routes
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
 
     return (
         <nav className="fixed top-0 left-0 z-[100] pointer-events-none">

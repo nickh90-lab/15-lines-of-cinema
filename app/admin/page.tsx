@@ -6,7 +6,7 @@ import { AdminLibraryClient } from '@/components/admin/AdminLibraryClient';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
-    const movies = await getMovies();
+    const movies = await getMovies(true);
 
     return (
         <div className="max-w-[1400px] mx-auto">

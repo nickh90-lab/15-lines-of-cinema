@@ -5,7 +5,7 @@ import { Movie } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid'; // Need to install uuid or just use random string
 
 export async function GET() {
-    const movies = await getMovies();
+    const movies = await getMovies(true);
     return NextResponse.json(movies);
 }
 
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
         // Use static getMovies to avoid dynamic issues if possible, 
         // but here we just need slug check.
-        const movies = await getMovies();
+        const movies = await getMovies(true);
 
         const newMovie: Movie = {
             ...body,

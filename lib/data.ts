@@ -10,11 +10,12 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 const dataPath = path.join(process.cwd(), 'data/movies.json');
 
-export async function getMovies(): Promise<Movie[]> {
+export async function getMovies(includeDrafts: boolean = false): Promise<Movie[]> {
     // 1. Try Database (if configured)
     if (process.env.POSTGRES_PRISMA_URL) {
         try {
             const movies = await prisma.movie.findMany({
+                where: includeDrafts ? undefined : { isDraft: false },
                 orderBy: { createdAt: 'desc' }
             });
             // Map Prisma model back to our Type (handle JSON fields if any)
@@ -35,6 +36,7 @@ export async function getMovies(): Promise<Movie[]> {
                     originality: m.originalityScore,
                     audiovisual: m.audiovisualScore,
                 },
+                isDraft: m.isDraft,
                 releaseDate: m.createdAt.toISOString(), // Or separate field if we added it, but type requires it
                 createdAt: m.createdAt.toISOString()
             }));
@@ -46,19 +48,20 @@ export async function getMovies(): Promise<Movie[]> {
     // 2. Fallback to Filesystem
     try {
         const fileContent = await fs.readFile(dataPath, 'utf-8');
-        return JSON.parse(fileContent);
+        const parsed = JSON.parse(fileContent);
+        return includeDrafts ? parsed : parsed.filter((m: any) => !m.isDraft);
     } catch (error) {
         console.error('Error reading movies:', error);
         return [];
     }
 }
 
-export async function getMovieBySlug(slug: string): Promise<Movie | undefined> {
+export async function getMovieBySlug(slug: string, includeDrafts: boolean = false): Promise<Movie | undefined> {
     // 1. Try Database
     if (process.env.POSTGRES_PRISMA_URL) {
         try {
             const movie = await prisma.movie.findUnique({ where: { slug } });
-            if (movie) {
+            if (movie && (includeDrafts || !movie.isDraft)) {
                 return {
                     ...movie,
                     duration: movie.duration ?? undefined,
@@ -76,6 +79,7 @@ export async function getMovieBySlug(slug: string): Promise<Movie | undefined> {
                         originality: movie.originalityScore,
                         audiovisual: movie.audiovisualScore,
                     },
+                    isDraft: movie.isDraft,
                     releaseDate: movie.createdAt.toISOString(),
                     createdAt: movie.createdAt.toISOString()
                 };
@@ -86,7 +90,7 @@ export async function getMovieBySlug(slug: string): Promise<Movie | undefined> {
     }
 
     // 2. Fallback to Filesystem
-    const movies = await getMovies(); // This will eventually fallback to FS if DB fails above
+    const movies = await getMovies(includeDrafts); // This will eventually fallback to FS if DB fails above
     return movies.find((movie) => movie.slug === slug);
 }
 
@@ -133,6 +137,8 @@ export async function upsertMovie(movie: Movie): Promise<void> {
             endingScore: movie.technicalScores?.ending || 0,
             originalityScore: movie.technicalScores?.originality || 0,
             audiovisualScore: movie.technicalScores?.audiovisual || 0,
+
+            isDraft: movie.isDraft ?? false,
 
             cast: movie.cast ? JSON.parse(JSON.stringify(movie.cast)) : []
         };

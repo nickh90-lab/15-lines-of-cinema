@@ -132,7 +132,11 @@ export function AdminLibraryClient({ initialMovies }: AdminLibraryClientProps) {
                                     </div>
                                     <p className="text-sm text-white/50 truncate mb-4">{movie.director}</p>
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[10px] uppercase font-bold tracking-widest text-green-500/80 px-2 py-0.5 rounded border border-green-500/20 bg-green-500/5">Published</span>
+                                        {movie.isDraft ? (
+                                            <span className="text-[10px] uppercase font-bold tracking-widest text-orange-500/80 px-2 py-0.5 rounded border border-orange-500/20 bg-orange-500/5">Draft</span>
+                                        ) : (
+                                            <span className="text-[10px] uppercase font-bold tracking-widest text-green-500/80 px-2 py-0.5 rounded border border-green-500/20 bg-green-500/5">Published</span>
+                                        )}
                                         <div className="flex gap-1.5">
                                             {movie.genres.slice(0, 2).map((genre, i) => (
                                                 <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/40" />
@@ -169,7 +173,12 @@ export function AdminLibraryClient({ initialMovies }: AdminLibraryClientProps) {
                                                     <Image src={movie.posterUrl} alt={movie.title} fill className="object-cover" unoptimized />
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-heading font-black text-lg group-hover:text-accent transition-colors">{movie.title}</h4>
+                                                    <h4 className="font-heading font-black text-lg group-hover:text-accent transition-colors flex items-center gap-2">
+                                                        {movie.title}
+                                                        {movie.isDraft && (
+                                                            <span className="text-[8px] uppercase font-bold tracking-widest text-orange-500/80 px-1.5 py-0.5 rounded border border-orange-500/20 bg-orange-500/5">Draft</span>
+                                                        )}
+                                                    </h4>
                                                     <p className="text-xs text-white/40">{movie.director}</p>
                                                 </div>
                                             </div>

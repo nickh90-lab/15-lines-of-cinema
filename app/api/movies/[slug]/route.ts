@@ -6,7 +6,7 @@ import { getMovies, upsertMovie, deleteMovie } from '@/lib/data';
 export async function GET(request: Request, props: { params: Promise<{ slug: string }> }) {
     const params = await props.params;
     const slug = params.slug;
-    const movies = await getMovies();
+    const movies = await getMovies(true);
     const movie = movies.find(m => m.slug === slug);
 
     if (!movie) {
@@ -21,7 +21,7 @@ export async function PUT(request: Request, props: { params: Promise<{ slug: str
         const params = await props.params;
         const slug = params.slug;
         const body = await request.json();
-        const movies = await getMovies();
+        const movies = await getMovies(true);
 
         const index = movies.findIndex(m => m.slug === slug);
         if (index === -1) {

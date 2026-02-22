@@ -147,7 +147,7 @@ export default function AddMoviePage() {
         });
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent, isDraft: boolean) => {
         e.preventDefault();
         setLoading(true);
 
@@ -167,7 +167,8 @@ export default function AddMoviePage() {
                 ...formData,
                 trailerUrl: getYouTubeEmbedUrl(formData.trailerUrl || ''),
                 rating: finalRating,
-                slug
+                slug,
+                isDraft
             };
 
             const res = await fetch('/api/movies', {
@@ -215,7 +216,7 @@ export default function AddMoviePage() {
                         type="button"
                         onClick={handleImport}
                         disabled={importLoading || !imdbUrl}
-                        className="px-6 py-3 bg-accent text-white rounded font-bold hover:bg-opacity-80 disabled:opacity-50"
+                        className="px-6 py-3 bg-accent text-black rounded font-bold hover:bg-opacity-80 disabled:opacity-50"
                     >
                         {importLoading ? 'Fetching...' : 'Fetch Data'}
                     </button>
@@ -223,7 +224,7 @@ export default function AddMoviePage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 items-start">
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form className="space-y-8">
                     {/* Basic Info */}
                     <section className="bg-white/[0.03] p-8 rounded-[32px] border border-white/5 backdrop-blur-md">
                         <h2 className="text-xl font-heading font-black mb-8 text-white flex items-center gap-3">
@@ -399,16 +400,25 @@ export default function AddMoviePage() {
                         </div>
                     </section>
 
-                    <div className="flex justify-end gap-6 pt-8">
-                        <Link href="/admin" className="px-8 py-4 rounded-2xl text-white/40 hover:text-white transition-colors font-bold uppercase tracking-widest text-xs">
-                            Discard Changes
+                    <div className="flex justify-end gap-4 pt-8">
+                        <Link href="/admin" className="px-8 py-4 rounded-2xl text-white/40 hover:text-white transition-colors font-bold uppercase tracking-widest text-xs flex items-center">
+                            Discard
                         </Link>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={(e) => handleSubmit(e, true)}
+                            disabled={loading || (formData.review15Lines?.filter(line => line.trim() !== '') || []).length !== 15}
+                            className="px-8 py-4 bg-white/10 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/20 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/20"
+                        >
+                            {loading ? 'Saving...' : 'Save Concept'}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={(e) => handleSubmit(e, false)}
                             disabled={loading || (formData.review15Lines?.filter(line => line.trim() !== '') || []).length !== 15}
                             className="px-10 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/80 transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-xl shadow-white/5"
                         >
-                            {loading ? 'Publishing...' : 'Publish Masterpiece'}
+                            {loading ? 'Publishing...' : 'Publish'}
                         </button>
                     </div>
                 </form>

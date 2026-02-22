@@ -31,6 +31,8 @@ export interface Movie {
   review15Lines?: string[]; // The 15 lines of the review
   genres: string[];
 
+  isDraft?: boolean;
+
   technicalScores: TechnicalScores;
   awards?: string[];
   releaseDate: string; // ISO date string

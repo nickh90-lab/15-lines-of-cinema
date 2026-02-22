@@ -71,7 +71,7 @@ export function ObsidianHeader({ allMovies }: ObsidianHeaderProps) {
                 <div />
 
                 {/* Search Interaction */}
-                <div className="w-full max-w-md relative" ref={dropdownRef}>
+                <div className="w-[160px] sm:w-[300px] md:w-full max-w-md relative" ref={dropdownRef}>
                     <div onFocus={() => setIsFocused(true)}>
                         <ObsidianSearchInput
                             value={searchQuery}
@@ -91,7 +91,7 @@ export function ObsidianHeader({ allMovies }: ObsidianHeaderProps) {
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute top-full left-0 right-0 mt-4 bg-black/80 backdrop-blur-2xl border border-white/10 rounded-[32px] overflow-hidden shadow-2xl z-50 p-2"
+                                className="absolute top-full right-0 w-[calc(100vw-3rem)] sm:w-full sm:left-0 mt-4 bg-black/80 backdrop-blur-2xl border border-white/10 rounded-[32px] overflow-hidden shadow-2xl z-50 p-2"
                             >
                                 {filteredMovies.length > 0 ? (
                                     <div className="flex flex-col gap-1">
