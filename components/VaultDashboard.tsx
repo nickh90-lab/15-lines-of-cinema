@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Movie } from '@/lib/types';
 import { GENRES } from '@/lib/constants';
@@ -84,6 +84,31 @@ export function VaultDashboard({ allMovies }: VaultDashboardProps) {
 
     const allMoviesList = processedMovies.slice(0, visibleCount);
     const hasMore = visibleCount < processedMovies.length;
+
+    // Infinite Scroll Observer
+    const loadMoreRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    handleLoadMore();
+                }
+            },
+            { threshold: 0.1, rootMargin: '200px' }
+        );
+
+        const currentRef = loadMoreRef.current;
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, [hasMore, searchQuery, selectedGenre, sortBy]); // Reset/Re-observe when filters change
 
     return (
         <div className="min-h-screen pb-20">
@@ -263,15 +288,18 @@ export function VaultDashboard({ allMovies }: VaultDashboardProps) {
                                 </div>
                             )}
 
-                            {/* Load More Trigger */}
+                            {/* Infinite Scroll Trigger */}
                             {hasMore && (
-                                <div className="mt-12 flex justify-center">
-                                    <button
-                                        onClick={handleLoadMore}
-                                        className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white font-medium transition-colors"
-                                    >
-                                        Load More Movies
-                                    </button>
+                                <div
+                                    ref={loadMoreRef}
+                                    className="mt-12 flex justify-center py-8"
+                                >
+                                    <div className="flex flex-col items-center gap-4">
+                                        <div className="w-8 h-8 rounded-full border-2 border-white/10 border-t-white/40 animate-spin" />
+                                        <span className="text-xs font-medium text-white/20 uppercase tracking-[0.2em]">
+                                            Loading more movies...
+                                        </span>
+                                    </div>
                                 </div>
                             )}
 
