@@ -97,7 +97,7 @@ export function VaultDashboard({ allMovies }: VaultDashboardProps) {
                     animate={{ opacity: 1, height: 'auto' }}
                     className="overflow-hidden"
                 >
-                    <ObsidianHero movie={sortedByDate[0]} />
+                    <ObsidianHero movies={sortedByDate.slice(0, 5)} />
                 </motion.div>
             )}
 
