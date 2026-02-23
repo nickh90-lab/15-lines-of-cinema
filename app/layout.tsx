@@ -1,20 +1,21 @@
 import type { Metadata } from 'next';
-import { Outfit, Inter } from 'next/font/google';
+import { DM_Serif_Display, Inter } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/ui/Navbar';
 import { cn } from '@/lib/utils';
 import { Analytics } from '@vercel/analytics/next';
 import { AnalyticsTracker } from '@/components/AnalyticsTracker';
 
-const outfit = Outfit({
+const dmSerif = DM_Serif_Display({
   subsets: ['latin'],
-  variable: '--font-outfit',
+  weight: ['400'],
+  variable: '--font-serif',
   display: 'swap',
 });
 
 const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sans',
   display: 'swap',
 });
 
@@ -64,8 +65,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(
-        "min-h-screen bg-background text-foreground font-body antialiased selection:bg-accent selection:text-white transition-colors duration-700",
-        outfit.variable,
+        "min-h-screen bg-background text-foreground antialiased selection:bg-accent selection:text-white transition-colors duration-700",
+        dmSerif.variable,
         inter.variable
       )}>
         {/* Global Gradient Background */}

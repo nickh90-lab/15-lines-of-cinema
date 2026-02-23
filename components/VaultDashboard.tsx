@@ -146,7 +146,7 @@ export function VaultDashboard({ allMovies }: VaultDashboardProps) {
                         {/* All Movies Section (Custom Grid for Load More) */}
                         <section className="py-12 px-6 max-w-[1400px] mx-auto border-t border-white/5 mt-8">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                                <h2 className="text-xl font-semibold text-white tracking-tight">All Movies</h2>
+                                <h2 className="text-xl md:text-2xl font-bold font-heading text-white tracking-tight">All Movies</h2>
 
                                 <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                                     {/* Search Input */}

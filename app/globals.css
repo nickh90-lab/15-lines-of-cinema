@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --font-heading: 'Inter', sans-serif;
-  /* Clean, modern, functional */
-  --font-body: 'Inter', sans-serif;
+  --font-serif: 'DM Serif Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: var(--font-serif);
+  --font-body: var(--font-sans);
 
   /* "The Obsidian Vault" Palette */
   /* Background: Infinite Black */

@@ -20,8 +20,10 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        heading: ["var(--font-outfit)", "sans-serif"],
-        body: ["var(--font-inter)", "sans-serif"],
+        serif: ["var(--font-serif)", "serif"],
+        sans: ["var(--font-sans)", "sans-serif"],
+        heading: ["var(--font-serif)", "serif"],
+        body: ["var(--font-sans)", "sans-serif"],
       },
       animation: {
         shine: "shine 3s linear infinite",

@@ -64,14 +64,25 @@ export function ObsidianHero({ movies }: ObsidianHeroProps) {
                     transition={{ duration: 1.2, ease: "easeInOut" }}
                     className="absolute inset-0"
                 >
-                    <Image
-                        src={currentMovie.backdropUrl || currentMovie.posterUrl}
-                        alt={currentMovie.title}
-                        fill
-                        priority
-                        className="object-cover object-center"
-                        sizes="100vw"
-                    />
+                    <motion.div
+                        animate={{ scale: [1, 1.1] }}
+                        transition={{
+                            duration: 10,
+                            ease: "linear",
+                            repeat: Infinity,
+                            repeatType: "reverse"
+                        }}
+                        className="absolute inset-0"
+                    >
+                        <Image
+                            src={currentMovie.backdropUrl || currentMovie.posterUrl}
+                            alt={currentMovie.title}
+                            fill
+                            priority
+                            className="object-cover object-center"
+                            sizes="100vw"
+                        />
+                    </motion.div>
                     {/* The "Void" Gradient - Fades image into pure black at the bottom */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/40 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-r from-[#000000]/80 via-transparent to-transparent" />

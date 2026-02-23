@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Play, Star, Calendar, Clock, User, Award, Hash, Film, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { TrailerModal } from '@/components/movies/TrailerModal';
 import { getScoreColor } from '@/lib/colors';
 import { ObsidianCard } from '@/components/ObsidianCard';
@@ -23,6 +23,13 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
     const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [isReadingMode, setIsReadingMode] = useState(false);
     const prestigeColor = getScoreColor(movie.rating);
+
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
 
     // Helper for technical scores
     const scores = [
@@ -46,7 +53,12 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
             <header className="relative w-full min-h-[55vh] md:min-h-[65vh] flex flex-col justify-end overflow-hidden bg-black pb-0">
                 {/* Backdrop */}
                 {/* Static Backdrop - No motion */}
-                <div className="absolute inset-0">
+                <motion.div
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 2, ease: "easeOut" }}
+                    className="absolute inset-0"
+                >
                     <Image
                         src={movie.backdropUrl || movie.posterUrl}
                         alt={movie.title}
@@ -59,7 +71,7 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                         sizes="100vw"
                         onLoad={() => setIsImageLoaded(true)}
                     />
-                </div>
+                </motion.div>
 
                 {/* Cinematic Vignette & Gradient */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050505_120%)]" />
@@ -185,8 +197,15 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                 </div>
             </header>
 
+
+            {/* Scroll Progress Bar */}
+            <motion.div
+                className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent z-[100] origin-left"
+                style={{ scaleX }}
+            />
+
             {/* --- 2. THE VERDICT BAND (Sticky) --- */}
-            <div className="sticky top-0 z-40 bg-[#050505]/95 backdrop-blur-xl shadow-2xl">
+            <div className="sticky top-0 z-40 bg-black/60 backdrop-blur-2xl shadow-2xl border-b border-white/5">
                 <div className="container mx-auto px-6 md:px-12 max-w-7xl h-auto md:h-24 py-4 md:py-0 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12">
 
                     {/* Score (Left) */}
@@ -348,15 +367,15 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                                     const restOfText = paragraphText.slice(1);
                                                     return (
                                                         <motion.p layout key={i} className={cn(
-                                                            "text-white/80 font-serif tracking-wide transition-all duration-700",
-                                                            isReadingMode ? "text-xl md:text-3xl leading-[1.8]" : "text-lg md:text-xl leading-relaxed"
+                                                            "text-white/75 font-serif tracking-wide transition-all duration-700",
+                                                            isReadingMode ? "text-xl md:text-2xl lg:text-3xl leading-loose" : "text-lg md:text-xl leading-loose"
                                                         )}>
                                                             <span
                                                                 className={cn(
-                                                                    "float-left font-bold mr-4 mt-1 transition-all duration-700",
-                                                                    isReadingMode ? "text-6xl md:text-8xl" : "text-5xl md:text-7xl"
+                                                                    "float-left font-bold mr-4 mt-2 transition-all duration-700 select-none opacity-80",
+                                                                    isReadingMode ? "text-7xl md:text-8xl" : "text-6xl md:text-7xl"
                                                                 )}
-                                                                style={{ color: prestigeColor.primary }}
+                                                                style={{ color: prestigeColor.primary, lineHeight: 0.9, fontFamily: 'var(--font-serif)' }}
                                                             >
                                                                 {firstChar}
                                                             </span>
@@ -366,8 +385,8 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                                 }
                                                 return (
                                                     <motion.p layout key={i} className={cn(
-                                                        "text-white/80 font-serif tracking-wide transition-all duration-700",
-                                                        isReadingMode ? "text-xl md:text-3xl leading-[1.8]" : "text-lg md:text-xl leading-relaxed"
+                                                        "text-white/60 font-serif tracking-wide transition-all duration-700",
+                                                        isReadingMode ? "text-xl md:text-2xl lg:text-3xl leading-loose" : "text-lg md:text-xl leading-loose"
                                                     )}>
                                                         {paragraphText}
                                                     </motion.p>
@@ -387,34 +406,36 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
             </main>
 
             {/* --- 4. SIMILAR MOVIES --- */}
-            {similarMovies.length > 0 && (
-                <section className="max-w-5xl mx-auto px-6 py-12 md:py-16 border-t border-white/5">
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="flex flex-col gap-1">
-                            <h2 className="text-[10px] font-medium tracking-[0.3em] uppercase text-white/30 font-sans">
-                                Discovery
-                            </h2>
-                            <h3 className="text-xl md:text-2xl font-black font-heading tracking-tight italic text-white/80">
-                                Similar Movies
-                            </h3>
+            {
+                similarMovies.length > 0 && (
+                    <section className="max-w-5xl mx-auto px-6 py-12 md:py-16 border-t border-white/5">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex flex-col gap-1">
+                                <h2 className="text-[10px] font-medium tracking-[0.3em] uppercase text-white/30 font-sans">
+                                    Discovery
+                                </h2>
+                                <h3 className="text-xl md:text-2xl font-black font-heading tracking-tight italic text-white/80">
+                                    Similar Movies
+                                </h3>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
-                        {similarMovies.map((m, idx) => (
-                            <motion.div
-                                key={m.slug}
-                                initial={{ opacity: 0, y: 15 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: idx * 0.08 }}
-                            >
-                                <ObsidianCard movie={m} />
-                            </motion.div>
-                        ))}
-                    </div>
-                </section>
-            )}
-        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
+                            {similarMovies.map((m, idx) => (
+                                <motion.div
+                                    key={m.slug}
+                                    initial={{ opacity: 0, y: 15 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: idx * 0.08 }}
+                                >
+                                    <ObsidianCard movie={m} />
+                                </motion.div>
+                            ))}
+                        </div>
+                    </section>
+                )
+            }
+        </div >
     );
 }

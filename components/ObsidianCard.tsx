@@ -14,13 +14,32 @@ interface ObsidianCardProps {
 
 export function ObsidianCard({ movie, className }: ObsidianCardProps) {
     const [isLoaded, setIsLoaded] = useState(false);
+    const isPrestige = movie.rating >= 8.5;
 
     return (
         <Link href={`/movies/${movie.slug}`} className={cn("group block relative", className)}>
             <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="relative aspect-[2/3] rounded-xl overflow-hidden bg-white/5 border border-white/5 group-hover:border-white/20 transition-colors"
+                whileHover={{
+                    scale: 1.05,
+                    rotateY: 5,
+                    rotateX: -5,
+                    z: 50
+                }}
+                transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 20
+                }}
+                style={{
+                    transformStyle: "preserve-3d",
+                    willChange: "transform"
+                }}
+                className={cn(
+                    "relative aspect-[2/3] rounded-xl overflow-hidden bg-white/5 border",
+                    isPrestige
+                        ? "border-[#D4AF37]/50 shadow-[0_0_20px_rgba(212,175,55,0.2)] group-hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] group-hover:border-[#D4AF37]"
+                        : "border-white/5 group-hover:border-white/20 shadow-2xl"
+                )}
             >
                 {/* Poster Image */}
                 <Image
@@ -28,28 +47,34 @@ export function ObsidianCard({ movie, className }: ObsidianCardProps) {
                     alt={movie.title}
                     fill
                     className={cn(
-                        "object-cover transition-all duration-700 group-hover:brightness-110",
+                        "object-cover transition-all duration-300 group-hover:brightness-110 group-hover:scale-110",
                         isLoaded ? "opacity-100 blur-0" : "opacity-0 blur-md"
                     )}
                     sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
                     onLoad={() => setIsLoaded(true)}
                 />
 
+                {/* Prestige Overlay (Subtle Gold Gradient for 8.5+) */}
+                {isPrestige && (
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF37]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                )}
+
                 {/* Internal Glow (Top highlight) */}
                 <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                {/* External Glow (Behind - simulated via inset shadow or extra div if needed, but let's stick to clean internal/border effects for now to avoid mess) */}
-
                 {/* Metadata Overlay (Slide up on hover) */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
 
-                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-white font-medium text-sm leading-tight mb-1 drop-shadow-md">
+                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300" style={{ transform: "translateZ(30px)" }}>
+                    <h3 className="text-white font-bold font-heading text-sm leading-tight mb-1 drop-shadow-md">
                         {movie.title}
                     </h3>
                     <div className="flex items-center justify-between text-xs text-white/60 font-medium">
                         <span>{movie.year}</span>
-                        <span className="text-yellow-500">{movie.rating} ★</span>
+                        <span className={cn(
+                            "font-bold",
+                            isPrestige ? "text-[#D4AF37]" : "text-yellow-500"
+                        )}>{movie.rating} ★</span>
                     </div>
                 </div>
             </motion.div>

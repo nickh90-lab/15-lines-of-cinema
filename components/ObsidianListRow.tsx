@@ -43,7 +43,7 @@ export function ObsidianListRow({ movie, index }: ObsidianListRowProps) {
                 {/* 2. Title & Year (Primary) */}
                 <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                     <div className="md:col-span-5">
-                        <h3 className="font-medium text-white group-hover:text-primary transition-colors truncate">
+                        <h3 className="font-bold font-heading text-white group-hover:text-primary transition-colors truncate">
                             {movie.title}
                         </h3>
                     </div>

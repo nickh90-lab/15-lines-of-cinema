@@ -36,7 +36,7 @@ export function VaultCarousel({ title, movies, className }: VaultCarouselProps) 
     return (
         <section className={cn("py-8 relative group", className)}>
             <div className="px-6 max-w-[1400px] mx-auto mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white tracking-tight">{title}</h2>
+                <h2 className="text-xl md:text-2xl font-bold font-heading text-white tracking-tight">{title}</h2>
             </div>
 
             <div className="relative group/carousel max-w-[1400px] mx-auto px-6">
