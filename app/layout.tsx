@@ -1,19 +1,18 @@
 import type { Metadata } from 'next';
-import { DM_Serif_Display, Inter } from 'next/font/google';
+import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/ui/Navbar';
 import { cn } from '@/lib/utils';
 import { Analytics } from '@vercel/analytics/next';
 import { AnalyticsTracker } from '@/components/AnalyticsTracker';
 
-const dmSerif = DM_Serif_Display({
+const outfit = Outfit({
   subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-serif',
+  variable: '--font-heading',
   display: 'swap',
 });
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
@@ -66,8 +65,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(
         "min-h-screen bg-background text-foreground antialiased selection:bg-accent selection:text-white transition-colors duration-700",
-        dmSerif.variable,
-        inter.variable
+        outfit.variable,
+        plusJakartaSans.variable
       )}>
         {/* Global Gradient Background */}
         <div className="fixed inset-0 z-[-1] bg-background transition-colors duration-700" />

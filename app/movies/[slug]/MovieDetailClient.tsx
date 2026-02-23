@@ -53,12 +53,7 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
             <header className="relative w-full min-h-[55vh] md:min-h-[65vh] flex flex-col justify-end overflow-hidden bg-black pb-0">
                 {/* Backdrop */}
                 {/* Static Backdrop - No motion */}
-                <motion.div
-                    initial={{ scale: 1.1 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                    className="absolute inset-0"
-                >
+                <div className="absolute inset-0">
                     <Image
                         src={movie.backdropUrl || movie.posterUrl}
                         alt={movie.title}
@@ -71,7 +66,7 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                         sizes="100vw"
                         onLoad={() => setIsImageLoaded(true)}
                     />
-                </motion.div>
+                </div>
 
                 {/* Cinematic Vignette & Gradient */}
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050505_120%)]" />
@@ -251,11 +246,11 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                     </div>
 
                     {/* Tech Specs (Middle) */}
-                    <div className="flex flex-1 w-full md:w-auto items-center justify-start md:justify-center gap-4 md:gap-8 lg:gap-14 overflow-x-auto md:overflow-visible pb-4 md:pb-0 px-4 md:px-0 scrollbar-hide snap-x">
+                    <div className="flex flex-1 w-full md:w-auto items-center justify-start md:justify-center gap-2 md:gap-8 lg:gap-14 overflow-x-auto md:overflow-visible pb-4 md:pb-0 px-4 md:px-0 scrollbar-hide snap-x">
                         {scores.map((score, i) => {
                             const colors = getScoreColor(movie.rating); // Use overall rating colors
                             return (
-                                <div key={score.label} className="flex flex-col gap-2.5 min-w-[5rem] md:w-32 snap-center first:pl-2 last:pr-2">
+                                <div key={score.label} className="flex flex-col gap-2.5 min-w-[4.5rem] md:w-32 snap-center first:pl-2 last:pr-2">
                                     <div className="flex justify-between items-end text-[10px] uppercase font-black tracking-[0.2em]">
                                         <span className="text-white/40">{score.label}</span>
                                         <span
@@ -367,15 +362,15 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                                     const restOfText = paragraphText.slice(1);
                                                     return (
                                                         <motion.p layout key={i} className={cn(
-                                                            "text-white/75 font-serif tracking-wide transition-all duration-700",
-                                                            isReadingMode ? "text-xl md:text-2xl lg:text-3xl leading-loose" : "text-lg md:text-xl leading-loose"
+                                                            "text-white/80 font-sans tracking-wide transition-all duration-700",
+                                                            isReadingMode ? "text-xl md:text-2xl leading-relaxed" : "text-base md:text-lg leading-relaxed"
                                                         )}>
                                                             <span
                                                                 className={cn(
-                                                                    "float-left font-bold mr-4 mt-2 transition-all duration-700 select-none opacity-80",
-                                                                    isReadingMode ? "text-7xl md:text-8xl" : "text-6xl md:text-7xl"
+                                                                    "float-left font-bold mr-3 mt-1.5 transition-all duration-700 select-none opacity-90",
+                                                                    isReadingMode ? "text-6xl md:text-7xl" : "text-5xl md:text-6xl"
                                                                 )}
-                                                                style={{ color: prestigeColor.primary, lineHeight: 0.9, fontFamily: 'var(--font-serif)' }}
+                                                                style={{ color: prestigeColor.primary, lineHeight: 0.8 }}
                                                             >
                                                                 {firstChar}
                                                             </span>
@@ -385,8 +380,8 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                                 }
                                                 return (
                                                     <motion.p layout key={i} className={cn(
-                                                        "text-white/60 font-serif tracking-wide transition-all duration-700",
-                                                        isReadingMode ? "text-xl md:text-2xl lg:text-3xl leading-loose" : "text-lg md:text-xl leading-loose"
+                                                        "text-white/70 font-sans tracking-wide transition-all duration-700",
+                                                        isReadingMode ? "text-xl md:text-2xl leading-relaxed" : "text-base md:text-lg leading-relaxed"
                                                     )}>
                                                         {paragraphText}
                                                     </motion.p>
@@ -395,7 +390,7 @@ export function MovieDetailClient({ movie, similarMovies = [] }: MovieDetailClie
                                         })()}
                                     </div>
                                 ) : (
-                                    <p className="text-xl text-gray-500 italic p-8 border border-white/10 rounded-xl leading-relaxed font-serif whitespace-pre-wrap">
+                                    <p className="text-lg text-gray-500 italic p-8 border border-white/10 rounded-xl leading-relaxed font-sans whitespace-pre-wrap">
                                         {movie.reviewLong || "No review content available."}
                                     </p>
                                 )}
